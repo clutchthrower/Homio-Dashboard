@@ -155,7 +155,7 @@ homio_room:
           - homio_default
           - homio_menu_icon
     navigation:
-      card: !include /config/dashboards/templates/includes/homio_navigation.yaml
+      card: !include ../../includes/homio_navigation.yaml
     temperature: |
       [[[
         if (!variables.show_temp || !variables.temp_sensor || !states[variables.temp_sensor]) return;

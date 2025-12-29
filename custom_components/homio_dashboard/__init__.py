@@ -51,7 +51,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     # Remove the dashboard panel
-    if DOMAIN in hass.data.get("lovelace", {}).get("dashboards", {}):
+    lovelace_data = hass.data.get("lovelace")
+    if lovelace_data and hasattr(lovelace_data, "dashboards") and DOMAIN in lovelace_data.dashboards:
         hass.components.frontend.async_remove_panel(DOMAIN)
 
     return True
@@ -67,19 +68,29 @@ async def _copy_theme_to_config(hass: HomeAssistant) -> None:
     dest_themes_dir = config_dir / "themes"
     dest_theme = dest_themes_dir / "homio"
 
+    def _copy_theme():
+        """Copy theme files (runs in executor)."""
+        try:
+            # Create themes directory if it doesn't exist
+            dest_themes_dir.mkdir(exist_ok=True)
+
+            # Copy theme to standard location (overwrite if exists for updates)
+            if source_theme.exists():
+                if dest_theme.exists():
+                    shutil.rmtree(dest_theme)
+                shutil.copytree(source_theme, dest_theme)
+                return True
+            else:
+                _LOGGER.warning(f"Source theme not found: {source_theme}")
+                return False
+        except Exception as e:
+            _LOGGER.error(f"Failed to copy Homio theme: {e}")
+            return False
+
     try:
-        # Create themes directory if it doesn't exist
-        dest_themes_dir.mkdir(exist_ok=True)
-
-        # Copy theme to standard location (overwrite if exists for updates)
-        if source_theme.exists():
-            if dest_theme.exists():
-                shutil.rmtree(dest_theme)
-            shutil.copytree(source_theme, dest_theme)
+        success = await hass.async_add_executor_job(_copy_theme)
+        if success:
             _LOGGER.info(f"✅ Homio theme copied to {dest_theme}")
-        else:
-            _LOGGER.warning(f"Source theme not found: {source_theme}")
-
     except Exception as e:
         _LOGGER.error(f"Failed to copy Homio theme: {e}")
 
@@ -94,19 +105,29 @@ async def _copy_packages_to_config(hass: HomeAssistant) -> None:
     dest_packages_dir = config_dir / "packages"
     dest_package = dest_packages_dir / "homio"
 
+    def _copy_packages():
+        """Copy package files (runs in executor)."""
+        try:
+            # Create packages directory if it doesn't exist
+            dest_packages_dir.mkdir(exist_ok=True)
+
+            # Copy packages to standard location (overwrite if exists for updates)
+            if source_packages.exists():
+                if dest_package.exists():
+                    shutil.rmtree(dest_package)
+                shutil.copytree(source_packages, dest_package)
+                return True
+            else:
+                _LOGGER.warning(f"Source packages not found: {source_packages}")
+                return False
+        except Exception as e:
+            _LOGGER.error(f"Failed to copy Homio packages: {e}")
+            return False
+
     try:
-        # Create packages directory if it doesn't exist
-        dest_packages_dir.mkdir(exist_ok=True)
-
-        # Copy packages to standard location (overwrite if exists for updates)
-        if source_packages.exists():
-            if dest_package.exists():
-                shutil.rmtree(dest_package)
-            shutil.copytree(source_packages, dest_package)
+        success = await hass.async_add_executor_job(_copy_packages)
+        if success:
             _LOGGER.info(f"✅ Homio packages copied to {dest_package}")
-        else:
-            _LOGGER.warning(f"Source packages not found: {source_packages}")
-
     except Exception as e:
         _LOGGER.error(f"Failed to copy Homio packages: {e}")
 
@@ -201,8 +222,14 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
     integration_dir = Path(__file__).parent
     dashboard_path = integration_dir / "lovelace" / "homio.yaml"
 
+    # Get lovelace data
+    lovelace_data = hass.data.get("lovelace")
+    if not lovelace_data:
+        _LOGGER.error("Lovelace data not available")
+        return
+
     # Create the Lovelace YAML dashboard
-    hass.data["lovelace"]["dashboards"][DOMAIN] = LovelaceYAML(
+    dashboard = LovelaceYAML(
         hass,
         DOMAIN,
         {
@@ -214,7 +241,14 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
         },
     )
 
+    # Use attribute access instead of dictionary access
+    if hasattr(lovelace_data, "dashboards"):
+        lovelace_data.dashboards[DOMAIN] = dashboard
+    else:
+        # Fallback for older HA versions
+        lovelace_data["dashboards"][DOMAIN] = dashboard
+
     # Register the panel in the frontend
-    await hass.data["lovelace"]["dashboards"][DOMAIN].async_load(False)
+    await dashboard.async_load(False)
 
     _LOGGER.info(f"Homio Dashboard panel registered successfully")

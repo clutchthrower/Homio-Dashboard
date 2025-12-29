@@ -25,7 +25,7 @@ cards:
             grid-column-gap: 50px
             margin: 0
             padding: 0
-          cards: !include /config/dashboards/templates/includes/homio_navigation_list.yaml
+          cards: !include homio_navigation_list.yaml
         - type: custom:button-card
           template:
             - homio_time
