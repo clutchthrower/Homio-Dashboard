@@ -6,8 +6,9 @@ import os
 import shutil
 from pathlib import Path
 
-from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.frontend import add_extra_js_url, async_remove_panel
 from homeassistant.components.http import StaticPathConfig
+from homeassistant.components.lovelace import _register_panel
 from homeassistant.components.lovelace.dashboard import LovelaceYAML
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -43,17 +44,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await _register_static_resources(hass)
 
     # Register the dashboard panel
-    await _register_panel(hass, entry)
+    await _setup_dashboard_panel(hass, entry)
 
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    # Remove the dashboard panel
+    # Remove the dashboard from lovelace
     lovelace_data = hass.data.get("lovelace")
     if lovelace_data and hasattr(lovelace_data, "dashboards") and DOMAIN in lovelace_data.dashboards:
-        hass.components.frontend.async_remove_panel(DOMAIN)
+        # Remove from dashboards dict
+        if hasattr(lovelace_data, "dashboards"):
+            lovelace_data.dashboards.pop(DOMAIN, None)
+        else:
+            lovelace_data["dashboards"].pop(DOMAIN, None)
 
     return True
 
@@ -216,11 +221,20 @@ async def _register_static_resources(hass: HomeAssistant) -> None:
             _LOGGER.warning(f"JS file not found: {full_path}")
 
 
-async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
+async def _setup_dashboard_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Register the Homio Dashboard panel."""
 
     integration_dir = Path(__file__).parent
     dashboard_path = integration_dir / "lovelace" / "homio.yaml"
+
+    dashboard_config = {
+        "mode": "yaml",
+        "title": "Homio",
+        "icon": "mdi:star-plus-outline",
+        "show_in_sidebar": True,
+        "filename": str(dashboard_path),
+        "require_admin": False,
+    }
 
     # Get lovelace data
     lovelace_data = hass.data.get("lovelace")
@@ -229,17 +243,7 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
         return
 
     # Create the Lovelace YAML dashboard
-    dashboard = LovelaceYAML(
-        hass,
-        DOMAIN,
-        {
-            "mode": "yaml",
-            "title": "Homio",
-            "icon": "mdi:star-plus-outline",
-            "show_in_sidebar": True,
-            "filename": str(dashboard_path),
-        },
-    )
+    dashboard = LovelaceYAML(hass, DOMAIN, dashboard_config)
 
     # Use attribute access instead of dictionary access
     if hasattr(lovelace_data, "dashboards"):
@@ -248,7 +252,7 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
         # Fallback for older HA versions
         lovelace_data["dashboards"][DOMAIN] = dashboard
 
-    # Register the panel in the frontend
-    await dashboard.async_load(False)
+    # Register the panel in the frontend sidebar (this is what makes it show up!)
+    _register_panel(hass, DOMAIN, "yaml", dashboard_config, False)
 
     _LOGGER.info(f"Homio Dashboard panel registered successfully")
