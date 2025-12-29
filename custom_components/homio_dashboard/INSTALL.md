@@ -1,6 +1,6 @@
-# Homio Dashboard Installation - 100% Install & Go!
+# Homio Dashboard Installation
 
-This integration is installed via HACS and includes ALL dependencies with ZERO configuration.yaml changes required!
+This integration is installed via HACS and includes ALL dependencies!
 
 ## Installation Steps
 
@@ -14,7 +14,20 @@ This integration is installed via HACS and includes ALL dependencies with ZERO c
 6. Click "Download"
 7. **Restart Home Assistant**
 
-### 2. Add the Integration
+### 2. Configure Packages (ONE LINE!)
+
+Add this ONE line to your `configuration.yaml`:
+
+```yaml
+homeassistant:
+  packages: !include_dir_named packages
+```
+
+This loads the helper entities (input_boolean, input_number) needed for navigation and controls.
+
+**Save and restart Home Assistant**
+
+### 3. Add the Integration
 
 1. Go to Settings → Devices & Services → Integrations
 2. Click "+ ADD INTEGRATION"
@@ -26,11 +39,11 @@ This integration is installed via HACS and includes ALL dependencies with ZERO c
 
 - ✅ **JavaScript dependencies** (button-card, layout-card-modified, my-slider-v2) - auto-loaded
 - ✅ **Homio theme** - auto-copied to `/config/themes/homio/`
-- ✅ **Helper packages** - auto-copied to `/config/packages/homio/`
+- ✅ **Helper packages** - auto-copied to `/config/packages/homio/` and loaded via packages config
 - ✅ **Template sensors** (sensor.homio_current_date, sensor.homio_current_time) - auto-created
 - ✅ **Sidebar panel** - auto-registered with icon (⭐+)
 
-**NO configuration.yaml changes needed!**
+**Only ONE configuration.yaml line needed!**
 
 ### 3. Select Homio Theme
 

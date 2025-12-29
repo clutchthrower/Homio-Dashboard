@@ -40,8 +40,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Create template sensors (no YAML include needed!)
     await _create_template_sensors(hass)
 
-    # Create helper entities (no YAML include needed!)
-    await _create_helper_entities(hass)
+    # Check if helper entities exist and warn if missing
+    await _check_helper_entities(hass)
 
     # Register static paths and resources
     await _register_static_resources(hass)
@@ -194,55 +194,32 @@ async def _create_template_sensors(hass: HomeAssistant) -> None:
         _LOGGER.error(f"Failed to create Homio sensors: {e}")
 
 
-async def _create_helper_entities(hass: HomeAssistant) -> None:
-    """Create Homio helper entities programmatically (no YAML needed!)."""
-    try:
-        # Create input_boolean helpers
-        hass.states.async_set(
-            "input_boolean.homio_mobile_navigation",
-            "off",
-            {
-                "friendly_name": "Mobile Navigation",
-                "icon": "mdi:menu",
-            }
+async def _check_helper_entities(hass: HomeAssistant) -> None:
+    """Check if helper entities exist and provide helpful warnings."""
+    required_helpers = [
+        "input_boolean.homio_mobile_navigation",
+        "input_boolean.homio_heating_control",
+        "input_boolean.homio_hot_water_control",
+        "input_number.homio_thermostat_target_temperature",
+    ]
+
+    missing_helpers = []
+    for entity_id in required_helpers:
+        if entity_id not in hass.states.async_entity_ids():
+            missing_helpers.append(entity_id)
+
+    if missing_helpers:
+        _LOGGER.warning(
+            "⚠️  Missing helper entities: %s\n"
+            "These helpers are needed for dashboard functionality.\n"
+            "Add to your configuration.yaml:\n"
+            "homeassistant:\n"
+            "  packages: !include_dir_named packages\n"
+            "Then restart Home Assistant.",
+            ", ".join(missing_helpers)
         )
-
-        hass.states.async_set(
-            "input_boolean.homio_heating_control",
-            "off",
-            {
-                "friendly_name": "Heating Control",
-                "icon": "mdi:radiator",
-            }
-        )
-
-        hass.states.async_set(
-            "input_boolean.homio_hot_water_control",
-            "off",
-            {
-                "friendly_name": "Hot Water Control",
-                "icon": "mdi:water-boiler",
-            }
-        )
-
-        # Create input_number helper
-        hass.states.async_set(
-            "input_number.homio_thermostat_target_temperature",
-            "20",
-            {
-                "friendly_name": "Homio Thermostat Target Temperature",
-                "icon": "mdi:thermometer",
-                "unit_of_measurement": "°C",
-                "min": 7,
-                "max": 24,
-                "step": 0.5,
-            }
-        )
-
-        _LOGGER.info("✅ Homio helper entities created (3 input_booleans, 1 input_number)")
-
-    except Exception as e:
-        _LOGGER.error(f"Failed to create Homio helpers: {e}")
+    else:
+        _LOGGER.info("✅ All required helper entities found")
 
 
 async def _register_static_resources(hass: HomeAssistant) -> None:
