@@ -3,7 +3,7 @@ homio_logo:
     - homio_default
   tap_action:
     action: navigate
-    navigation_path: /dashboard-homio/home
+    navigation_path: /homio_dashboard/lounge
   name: Homio.
   styles:
     name:

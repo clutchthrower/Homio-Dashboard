@@ -252,7 +252,15 @@ async def _setup_dashboard_panel(hass: HomeAssistant, entry: ConfigEntry) -> Non
         # Fallback for older HA versions
         lovelace_data["dashboards"][DOMAIN] = dashboard
 
-    # Register the panel in the frontend sidebar (this is what makes it show up!)
+    # Load the dashboard YAML config (this is critical for proper routing!)
+    try:
+        await dashboard.async_load(False)
+        _LOGGER.info("Dashboard YAML loaded successfully")
+    except Exception as e:
+        _LOGGER.error(f"Failed to load dashboard YAML: {e}")
+        raise
+
+    # Register the panel in the frontend sidebar (this makes the icon show up!)
     _register_panel(hass, DOMAIN, "yaml", dashboard_config, False)
 
     _LOGGER.info(f"Homio Dashboard panel registered successfully")

@@ -3,52 +3,52 @@
     - homio_nav_button
   name: Room1
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room2
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room3
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room4
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room5
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room6
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room7
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room8
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
 - type: custom:button-card
   template:
     - homio_nav_button
   name: Room9
   variables:
-    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /dashboard-homio/lounge
+    path: # ADD PATH TO REQUIRED DASHBOARD FOR EXAMPLE /homio_dashboard/lounge
