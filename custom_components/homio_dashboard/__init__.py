@@ -33,6 +33,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Copy theme to standard themes directory for easy use
     await _copy_theme_to_config(hass)
 
+    # Copy packages to standard packages directory
+    await _copy_packages_to_config(hass)
+
+    # Create template sensors (no YAML include needed!)
+    await _create_template_sensors(hass)
+
     # Register static paths and resources
     await _register_static_resources(hass)
 
@@ -71,12 +77,92 @@ async def _copy_theme_to_config(hass: HomeAssistant) -> None:
                 shutil.rmtree(dest_theme)
             shutil.copytree(source_theme, dest_theme)
             _LOGGER.info(f"✅ Homio theme copied to {dest_theme}")
-            _LOGGER.info("Theme will be available after restart. Select 'Homio' from your profile.")
         else:
             _LOGGER.warning(f"Source theme not found: {source_theme}")
 
     except Exception as e:
         _LOGGER.error(f"Failed to copy Homio theme: {e}")
+
+
+async def _copy_packages_to_config(hass: HomeAssistant) -> None:
+    """Copy Homio packages to the standard Home Assistant packages directory."""
+    integration_dir = Path(__file__).parent
+    source_packages = integration_dir / "packages"
+
+    # Standard HA packages directory
+    config_dir = Path(hass.config.config_dir)
+    dest_packages_dir = config_dir / "packages"
+    dest_package = dest_packages_dir / "homio"
+
+    try:
+        # Create packages directory if it doesn't exist
+        dest_packages_dir.mkdir(exist_ok=True)
+
+        # Copy packages to standard location (overwrite if exists for updates)
+        if source_packages.exists():
+            if dest_package.exists():
+                shutil.rmtree(dest_package)
+            shutil.copytree(source_packages, dest_package)
+            _LOGGER.info(f"✅ Homio packages copied to {dest_package}")
+        else:
+            _LOGGER.warning(f"Source packages not found: {source_packages}")
+
+    except Exception as e:
+        _LOGGER.error(f"Failed to copy Homio packages: {e}")
+
+
+async def _create_template_sensors(hass: HomeAssistant) -> None:
+    """Create Homio template sensors programmatically (no YAML needed!)."""
+    try:
+        # Create Current Date sensor
+        hass.states.async_set(
+            "sensor.homio_current_date",
+            "",
+            {
+                "friendly_name": "Current Date",
+                "icon": "mdi:calendar",
+            }
+        )
+
+        # Create Current Time sensor
+        hass.states.async_set(
+            "sensor.homio_current_time",
+            "",
+            {
+                "friendly_name": "Current Time",
+                "icon": "mdi:clock",
+            }
+        )
+
+        # Set up periodic updates
+        async def update_sensors(now=None):
+            """Update the template sensors."""
+            from datetime import datetime
+            now = datetime.now()
+
+            # Format date: "Monday 29th December 2025"
+            day = now.day
+            suffix = "th" if 11 <= day <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+            date_str = now.strftime(f"%A {day}{suffix} %B %Y")
+
+            # Format time: "14:30"
+            time_str = now.strftime("%H:%M")
+
+            hass.states.async_set("sensor.homio_current_date", date_str)
+            hass.states.async_set("sensor.homio_current_time", time_str)
+
+        # Update immediately
+        await update_sensors()
+
+        # Update every minute
+        from homeassistant.helpers.event import async_track_time_interval
+        from datetime import timedelta
+        async_track_time_interval(hass, update_sensors, timedelta(minutes=1))
+
+        _LOGGER.info("✅ Homio template sensors created (sensor.homio_current_date, sensor.homio_current_time)")
+
+    except Exception as e:
+        _LOGGER.error(f"Failed to create Homio sensors: {e}")
 
 
 async def _register_static_resources(hass: HomeAssistant) -> None:

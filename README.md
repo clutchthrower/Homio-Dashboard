@@ -6,9 +6,9 @@ I plan on looking to integrate/create other cards into the homio design in the v
 
 ---
 
-## 📦 **Quick HACS Installation**
+## 📦 **100% Install & Go - ZERO Configuration Required!**
 
-Homio Dashboard is now a **full Home Assistant integration** with ALL dependencies included! Install via HACS and it appears in your sidebar automatically.
+Homio Dashboard is now a **complete Home Assistant integration** that handles EVERYTHING automatically! Install via HACS, add the integration, and it's ready to use - **no configuration.yaml changes needed!**
 
 ### **Installation via HACS (Recommended)**
 
@@ -16,7 +16,7 @@ Homio Dashboard is now a **full Home Assistant integration** with ALL dependenci
    - Open HACS in Home Assistant
    - Click the three dots menu (⋮) in the top right
    - Select "Custom repositories"
-   - Add this repository URL
+   - Add this repository URL: `https://github.com/clutchthrower/Homio-Dashboard`
    - Select category: **Integration**
    - Click "Add"
 
@@ -24,35 +24,30 @@ Homio Dashboard is now a **full Home Assistant integration** with ALL dependenci
    - Go to HACS → Integrations
    - Search for "Homio Dashboard"
    - Click "Download"
-   - Restart Home Assistant
+   - **Restart Home Assistant**
 
 3. **Add the Integration**:
    - Go to Settings → Devices & Services → Integrations
    - Click "+ ADD INTEGRATION"
    - Search for "Homio Dashboard"
-   - Click "Submit" to add
-   - **The Homio icon (⭐+) will appear in your sidebar!**
+   - Click "Submit"
+   - **Restart Home Assistant again**
 
-4. **Quick Configuration** (required after first install):
-   - Add to your `configuration.yaml`:
+4. **Select Homio Theme & Add Room Images**:
+   - Click your profile (bottom left)
+   - Select "Homio" from the theme dropdown
+   - Add your room background images to `custom_components/homio_dashboard/www/images/Homio/rooms/`
+   - **The Homio icon (⭐+) is now in your sidebar - click it to access your dashboard!**
 
-   ```yaml
-   homeassistant:
-     packages: !include_dir_named custom_components/homio_dashboard/packages
+**That's it - 100% install & go!** The integration automatically:
+- ✅ Loads all JavaScript dependencies (button-card v7.0.1, layout-card-modified, my-slider-v2)
+- ✅ Copies Homio theme to `/config/themes/homio/`
+- ✅ Copies helper packages to `/config/packages/homio/`
+- ✅ Creates template sensors (sensor.homio_current_date, sensor.homio_current_time)
+- ✅ Bundles 19 icon assets
+- ✅ Registers the sidebar panel with icon
 
-   frontend:
-     themes: !include_dir_merge_named themes
-
-   template: !include custom_components/homio_dashboard/sensors.yaml
-   ```
-
-   **Note:** The Homio theme is automatically copied to `/config/themes/homio/` when you add the integration, so it works with your existing themes configuration!
-
-   - Restart Home Assistant
-   - Select "Homio" theme from your profile
-   - Add your room images to `custom_components/homio_dashboard/www/images/Homio/rooms/`
-
-**That's it!** All JavaScript dependencies (button-card, layout-card-modified, my-slider-v2) and 19 icon assets are bundled and loaded automatically. **ZERO external dependencies needed!**
+**ZERO external dependencies! ZERO configuration.yaml changes! Just install and go!**
 
 --- 
 

@@ -1,56 +1,43 @@
-# Homio Dashboard Installation
+# Homio Dashboard Installation - 100% Install & Go!
 
-This integration is installed via HACS and includes ALL dependencies!
+This integration is installed via HACS and includes ALL dependencies with ZERO configuration.yaml changes required!
 
-## Post-Installation Configuration
+## Installation Steps
 
-After installing the integration and adding it via the Integrations page, you need to configure a few things in your Home Assistant:
+### 1. Install via HACS
 
-### 1. Enable Packages (for helpers)
+1. Go to HACS → Integrations
+2. Click "Custom repositories"
+3. Add this repository URL: `https://github.com/clutchthrower/Homio-Dashboard`
+4. Select category: **Integration**
+5. Search for "Homio Dashboard"
+6. Click "Download"
+7. **Restart Home Assistant**
 
-Add to your `configuration.yaml`:
+### 2. Add the Integration
 
-```yaml
-homeassistant:
-  packages: !include_dir_named custom_components/homio_dashboard/packages
-```
+1. Go to Settings → Devices & Services → Integrations
+2. Click "+ ADD INTEGRATION"
+3. Search for "Homio Dashboard"
+4. Click "Submit"
+5. **Restart Home Assistant again**
 
-### 2. Load Homio Theme
+**That's it!** The integration automatically configures everything:
 
-Add to your `configuration.yaml`:
+- ✅ **JavaScript dependencies** (button-card, layout-card-modified, my-slider-v2) - auto-loaded
+- ✅ **Homio theme** - auto-copied to `/config/themes/homio/`
+- ✅ **Helper packages** - auto-copied to `/config/packages/homio/`
+- ✅ **Template sensors** (sensor.homio_current_date, sensor.homio_current_time) - auto-created
+- ✅ **Sidebar panel** - auto-registered with icon (⭐+)
 
-```yaml
-frontend:
-  themes: !include_dir_merge_named custom_components/homio_dashboard/themes
-```
+**NO configuration.yaml changes needed!**
 
-### 3. Add Template Sensors
-
-Add to your `configuration.yaml`:
-
-```yaml
-template: !include custom_components/homio_dashboard/sensors.yaml
-```
-
-### 4. Restart Home Assistant
-
-All JavaScript resources are automatically loaded by the integration:
-- ✅ button-card (bundled)
-- ✅ layout-card-modified (bundled)
-- ✅ my-slider-v2 (bundled)
-
-No external HACS installations needed!
-
-### 5. Restart Again
-
-After making configuration changes, restart Home Assistant.
-
-### 6. Select Homio Theme
+### 3. Select Homio Theme
 
 1. Click your profile (bottom left)
 2. Select "Homio" from the theme dropdown
 
-### 7. Add Room Images
+### 4. Add Room Images
 
 Add your room background images to:
 ```
