@@ -40,6 +40,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Create template sensors (no YAML include needed!)
     await _create_template_sensors(hass)
 
+    # Create helper entities (no YAML include needed!)
+    await _create_helper_entities(hass)
+
     # Register static paths and resources
     await _register_static_resources(hass)
 
@@ -189,6 +192,57 @@ async def _create_template_sensors(hass: HomeAssistant) -> None:
 
     except Exception as e:
         _LOGGER.error(f"Failed to create Homio sensors: {e}")
+
+
+async def _create_helper_entities(hass: HomeAssistant) -> None:
+    """Create Homio helper entities programmatically (no YAML needed!)."""
+    try:
+        # Create input_boolean helpers
+        hass.states.async_set(
+            "input_boolean.homio_mobile_navigation",
+            "off",
+            {
+                "friendly_name": "Mobile Navigation",
+                "icon": "mdi:menu",
+            }
+        )
+
+        hass.states.async_set(
+            "input_boolean.homio_heating_control",
+            "off",
+            {
+                "friendly_name": "Heating Control",
+                "icon": "mdi:radiator",
+            }
+        )
+
+        hass.states.async_set(
+            "input_boolean.homio_hot_water_control",
+            "off",
+            {
+                "friendly_name": "Hot Water Control",
+                "icon": "mdi:water-boiler",
+            }
+        )
+
+        # Create input_number helper
+        hass.states.async_set(
+            "input_number.homio_thermostat_target_temperature",
+            "20",
+            {
+                "friendly_name": "Homio Thermostat Target Temperature",
+                "icon": "mdi:thermometer",
+                "unit_of_measurement": "°C",
+                "min": 7,
+                "max": 24,
+                "step": 0.5,
+            }
+        )
+
+        _LOGGER.info("✅ Homio helper entities created (3 input_booleans, 1 input_number)")
+
+    except Exception as e:
+        _LOGGER.error(f"Failed to create Homio helpers: {e}")
 
 
 async def _register_static_resources(hass: HomeAssistant) -> None:
