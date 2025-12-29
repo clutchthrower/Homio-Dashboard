@@ -17,29 +17,38 @@ views:
           show_motion: false
         template:
           - homio_room
-        name: Homio Dashboard
+        name: Welcome to Homio
       - type: custom:layout-card
         layout_type: custom:grid-layout
         layout: !include ../dashboards/templates/includes/homio_entity_layout.yaml
         cards:
-          - type: markdown
-            content: |
-              # Welcome to Homio Dashboard! 🎉
-
-              This is a minimal working example. To customize:
-
-              1. Edit this file at:
-                 `custom_components/homio_dashboard/lovelace/homio.yaml`
-
-              2. Replace placeholder entities with your own entities
-
-              3. Add your room background images to:
-                 `custom_components/homio_dashboard/www/images/Homio/rooms/`
-
-              4. Check the console for any remaining errors
-
-              **Example entities you can add:**
-              - Lights: `light.your_light_name`
-              - Sensors: `sensor.your_sensor_name`
-              - Binary sensors: `binary_sensor.your_sensor_name`
-              - Media players: `media_player.your_player_name`
+          - type: custom:button-card
+            template:
+              - homio_default
+            name: "Setup Instructions"
+            styles:
+              card:
+                - background: "rgba(255, 255, 255, 0.1)"
+                - border-radius: "12px"
+                - padding: "20px"
+                - height: "auto"
+              name:
+                - font-size: "18px"
+                - font-weight: "700"
+                - text-align: "left"
+                - white-space: "pre-line"
+            custom_fields:
+              info: |
+                [[[
+                  return `<div style="font-size: 14px; line-height: 1.6; color: var(--primary-text-color); text-align: left;">
+                    <p><strong>Welcome to Homio Dashboard!</strong></p>
+                    <p>To customize this dashboard:</p>
+                    <ol style="padding-left: 20px;">
+                      <li>Edit: custom_components/homio_dashboard/lovelace/homio.yaml</li>
+                      <li>Add your entities (lights, sensors, etc.)</li>
+                      <li>Add room images to: www/images/Homio/rooms/</li>
+                    </ol>
+                    <p>All helper entities and sensors are loaded!</p>
+                  </div>`;
+                ]]]
+            card_size: 3
