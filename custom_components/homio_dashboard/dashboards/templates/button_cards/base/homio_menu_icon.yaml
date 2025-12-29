@@ -3,9 +3,9 @@ homio_menu_icon:
   entity_picture: |
     [[[
       if (states["input_boolean.homio_mobile_navigation"].state === "on") {
-        return "/local/images/Homio/icons/close.svg";
+        return "/homio_dashboard/images/Homio/icons/close.svg";
       } else {
-        return "/local/images/Homio/icons/menu.svg";
+        return "/homio_dashboard/images/Homio/icons/menu.svg";
       }
     ]]]
   tap_action:

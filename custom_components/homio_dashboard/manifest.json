@@ -1,0 +1,11 @@
+{
+  "domain": "homio_dashboard",
+  "name": "Homio Dashboard",
+  "codeowners": ["@iamtherufus"],
+  "config_flow": true,
+  "dependencies": ["http"],
+  "documentation": "https://github.com/iamtherufus/Homio",
+  "iot_class": "calculated",
+  "requirements": [],
+  "version": "1.0.0"
+}

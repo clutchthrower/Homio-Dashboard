@@ -1,8 +1,58 @@
 ## **🏠 Welcome to Homio**
 
-Homio is a clean, minimal, and fully YAML-based dashboard for Home Assistant that i build for a bit of fun. It's still work in progress but wanted to share it with you after receiving many requests for it. It’s built with tablets in mind — perfect for a wall-mounted screen — but it also works well on mobile thanks to its responsive layout. Everything is done in YAML to give you full control and make it easier to share, reuse, and tweak. I recommend to use the visual studio code editor plugin in home assistant to make coding that little bit easier.
+Homio is a clean, minimal, and fully YAML-based dashboard for Home Assistant that i build for a bit of fun. It's still work in progress but wanted to share it with you after receiving many requests for it. It's built with tablets in mind — perfect for a wall-mounted screen — but it also works well on mobile thanks to its responsive layout. Everything is done in YAML to give you full control and make it easier to share, reuse, and tweak. I recommend to use the visual studio code editor plugin in home assistant to make coding that little bit easier.
 
-I plan on looking to integrate/create other cards into the homio design in the very near future so feel free to reach out if you have any requests. 
+I plan on looking to integrate/create other cards into the homio design in the very near future so feel free to reach out if you have any requests.
+
+---
+
+## 📦 **Quick HACS Installation**
+
+Homio Dashboard is now a **full Home Assistant integration** with ALL dependencies included! Install via HACS and it appears in your sidebar automatically.
+
+### **Installation via HACS (Recommended)**
+
+1. **Add to HACS**:
+   - Open HACS in Home Assistant
+   - Click the three dots menu (⋮) in the top right
+   - Select "Custom repositories"
+   - Add this repository URL
+   - Select category: **Integration**
+   - Click "Add"
+
+2. **Install Homio Dashboard**:
+   - Go to HACS → Integrations
+   - Search for "Homio Dashboard"
+   - Click "Download"
+   - Restart Home Assistant
+
+3. **Add the Integration**:
+   - Go to Settings → Devices & Services → Integrations
+   - Click "+ ADD INTEGRATION"
+   - Search for "Homio Dashboard"
+   - Click "Submit" to add
+   - **The Homio icon (⭐+) will appear in your sidebar!**
+
+4. **Quick Configuration** (required after first install):
+   - Add to your `configuration.yaml`:
+
+   ```yaml
+   homeassistant:
+     packages: !include_dir_named custom_components/homio_dashboard/packages
+
+   frontend:
+     themes: !include_dir_merge_named custom_components/homio_dashboard/themes
+
+   template: !include custom_components/homio_dashboard/sensors.yaml
+   ```
+
+   - Restart Home Assistant
+   - Select "Homio" theme from your profile
+   - Add your room images to `custom_components/homio_dashboard/www/images/Homio/rooms/`
+
+**That's it!** All JavaScript dependencies (button-card, layout-card-modified, my-slider-v2) and 19 icon assets are bundled and loaded automatically. **ZERO external dependencies needed!**
+
+--- 
 
 **UPDATE 27/12/26**
 
@@ -44,24 +94,17 @@ lovelace:
       filename: dashboards/homio/homio.yaml
 ```
 
-2. Homio uses a couple of custom cards,
+2. **ALL custom cards are bundled** - No external installations needed!
 
-**button-card by Romraider** — https://github.com/custom-cards/button-card  - This is the main building block of Homio. Install it via HCS.
+**✅ Everything Included in Integration:**
 
-**layout-card by Thomas Loven** — https://github.com/thomasloven/lovelace-layout-card - You’ll need to actually use the slightly modified version included in this repo based on the layout-card by Thomas Loven              **https://github.com/iamtherufus/Homio/blob/main/layout-card-modified.js** which supports some extra CSS properties. Dont install this card via HACS, grab it from the repo and install it manually. If you have installed the un-modified version of this card via HACS in the past you will need to remove it otherwise it will conflict with the modified version from this repo.
+**button-card** (v7.0.1) — The main building block of Homio. Fully bundled in the integration.
 
-The layout-card-modified needs to be installed in this location,
+**layout-card-modified** — A slightly modified version of layout-card by Thomas Loven that supports extra CSS properties needed for Homio. This is automatically installed to `/www/community/layout-card-modified/layout-card-modified.js` when you install via HACS.
 
-**/www/community/layout-card-modified/layout-card-modified.js**
+**my-slider-v2 by AnthonMS** - A fantastic light slider used for the homio_light card brightness slider. This is automatically installed to `/www/community/light-slider/my-slider-v2.js` when you install via HACS. Full details on the slider configuration can be found here: **https://github.com/AnthonMS/my-cards/blob/main/docs/cards/slider-v2.md**
 
-**my-slider-v2 by AnthonMS** - This is a fantastic light slider created by AnthonMS which is used for the homio_light card brightness slider. Full details on his configuration can be found here.
-     **https://github.com/AnthonMS/my-cards/blob/main/docs/cards/slider-v2.md**
-
-The my-slider-V2 card needs to be installed in this location,
-
-**/local/community/light-slider/my-slider-v2.js**
-
-If you install either the layout-card-modified or my-slider-v2 to a different location that is ok but you must reference the location in the main home assistant configuration file **/config/configuation.yaml** under resources,
+**Note:** If you installed the un-modified version of layout-card via HACS in the past, you will need to remove it to avoid conflicts with the modified version.
 
 **Example**
 ```
@@ -162,21 +205,20 @@ Everything lives under `/config` in your Home Assistant setup,
 
 ## **🖼️ Assets Setup – Images & Icons**
 
-To make Homio look the way it’s intended, you’ll need to add your own room images and icons to the www folder in Home Assistant. These are used for things like room backgrounds and custom icons inside button cards. I dont use the built in mdi icons as i dont like them, they are to bold for my liking. There are other HACS addons that you can use but i dont. I do use the google material icons though but download them from google at the 100 weight as i feel they fitted my design better. I will include these in the repo and i plan to keep adding to them as well.
+**✅ Icons Included!** When you install via HACS, a collection of Google Material Design icons (weight 100) are automatically installed to `/www/images/Homio/icons/`. These include icons for doors, windows, lights, heating, and more.
 
-Material design icons link can be found below, 
+**Room Images:** You'll need to add your own room background images to personalize your dashboard. These are used for the room card backgrounds.
 
-**https://fonts.google.com/icons?icon.query=light**
+Material design icons link (for additional icons): **https://fonts.google.com/icons?icon.query=light**
 
-📁 Folder Structure
-Inside your /config/www directory, create the following folders:
+📁 Folder Structure (Auto-created by HACS)
 
 ```
 www/
 └── images/
     └── Homio/
-        ├── rooms/       ← Background images for rooms
-        └── icons/       ← SVG icons used in entity cards
+        ├── rooms/       ← Add your room background images here
+        └── icons/       ← SVG icons (included with HACS installation)
 
 ```
 

@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Homio Dashboard",
+        "description": "Homio Dashboard will be added to your sidebar. Click Submit to continue."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Only a single instance of Homio Dashboard is allowed."
+    }
+  }
+}

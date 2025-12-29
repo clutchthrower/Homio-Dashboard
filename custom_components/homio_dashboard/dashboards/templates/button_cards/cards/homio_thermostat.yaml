@@ -71,7 +71,7 @@ homio_thermostat:
             template:
               - homio_default
             show_entity_picture: true
-            entity_picture: /local/images/Homio/icons/power_off.svg
+            entity_picture: /homio_dashboard/images/Homio/icons/power_off.svg
             tap_action:
               action: call-service
               service: climate.set_hvac_mode
@@ -97,7 +97,7 @@ homio_thermostat:
             template:
               - homio_default
             show_entity_picture: true
-            entity_picture: /local/images/Homio/icons/heating.svg
+            entity_picture: /homio_dashboard/images/Homio/icons/heating.svg
             tap_action:
               action: call-service
               service: climate.set_hvac_mode
@@ -164,7 +164,7 @@ homio_thermostat:
                   template:
                     - homio_default
                   show_entity_picture: true
-                  entity_picture: /local/images/Homio/icons/increase.svg
+                  entity_picture: /homio_dashboard/images/Homio/icons/increase.svg
                   tap_action:
                     action: call-service
                     service: input_number.increment
@@ -219,7 +219,7 @@ homio_thermostat:
                   template:
                     - homio_default
                   show_entity_picture: true
-                  entity_picture: /local/images/Homio/icons/decrease.svg
+                  entity_picture: /homio_dashboard/images/Homio/icons/decrease.svg
                   tap_action:
                     action: call-service
                     service: input_number.decrement

@@ -1,11 +1,11 @@
 # You will need to replace the entities in the below button cards to your own otherwise you will just see a screen full of errors.
 
-button_card_templates: !include_dir_merge_named /config/dashboards/templates/button_cards
+button_card_templates: !include_dir_merge_named ../dashboards/templates/button_cards
 views:
   - type: custom:grid-layout
     title: lounge
     path: lounge
-    layout: !include /config/dashboards/templates/includes/homio_screen_layout.yaml
+    layout: !include ../dashboards/templates/includes/homio_screen_layout.yaml
     cards:
       - type: custom:button-card
         variables:
@@ -22,7 +22,7 @@ views:
         name: Lounge Room
       - type: custom:layout-card
         layout_type: custom:grid-layout
-        layout: !include /config/dashboards/templates/includes/homio_entity_layout.yaml
+        layout: !include ../dashboards/templates/includes/homio_entity_layout.yaml
         cards:
           - type: custom:button-card
             variables:

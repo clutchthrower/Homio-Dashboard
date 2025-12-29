@@ -6,7 +6,7 @@ homio_entity:
   entity_picture: |
     [[[
       const icon = variables.icon
-      return `/local/images/Homio/icons/${icon}.svg`
+      return `/homio_dashboard/images/Homio/icons/${icon}.svg`
     ]]]
   state:
     - value: "on"
