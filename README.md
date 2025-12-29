@@ -41,10 +41,12 @@ Homio Dashboard is now a **full Home Assistant integration** with ALL dependenci
      packages: !include_dir_named custom_components/homio_dashboard/packages
 
    frontend:
-     themes: !include_dir_merge_named custom_components/homio_dashboard/themes
+     themes: !include_dir_merge_named themes
 
    template: !include custom_components/homio_dashboard/sensors.yaml
    ```
+
+   **Note:** The Homio theme is automatically copied to `/config/themes/homio/` when you add the integration, so it works with your existing themes configuration!
 
    - Restart Home Assistant
    - Select "Homio" theme from your profile

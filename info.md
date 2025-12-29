@@ -47,10 +47,12 @@ homeassistant:
   packages: !include_dir_named custom_components/homio_dashboard/packages
 
 frontend:
-  themes: !include_dir_merge_named custom_components/homio_dashboard/themes
+  themes: !include_dir_merge_named themes
 
 template: !include custom_components/homio_dashboard/sensors.yaml
 ```
+
+**Note:** The Homio theme is automatically copied to `/config/themes/homio/` during integration setup!
 
 **Restart Home Assistant**
 

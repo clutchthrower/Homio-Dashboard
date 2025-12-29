@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import os
+import shutil
 from pathlib import Path
 
 from homeassistant.components.frontend import add_extra_js_url
@@ -29,6 +30,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Homio Dashboard from a config entry."""
 
+    # Copy theme to standard themes directory for easy use
+    await _copy_theme_to_config(hass)
+
     # Register static paths and resources
     await _register_static_resources(hass)
 
@@ -45,6 +49,34 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.components.frontend.async_remove_panel(DOMAIN)
 
     return True
+
+
+async def _copy_theme_to_config(hass: HomeAssistant) -> None:
+    """Copy Homio theme to the standard Home Assistant themes directory."""
+    integration_dir = Path(__file__).parent
+    source_theme = integration_dir / "themes" / "homio"
+
+    # Standard HA themes directory
+    config_dir = Path(hass.config.config_dir)
+    dest_themes_dir = config_dir / "themes"
+    dest_theme = dest_themes_dir / "homio"
+
+    try:
+        # Create themes directory if it doesn't exist
+        dest_themes_dir.mkdir(exist_ok=True)
+
+        # Copy theme to standard location (overwrite if exists for updates)
+        if source_theme.exists():
+            if dest_theme.exists():
+                shutil.rmtree(dest_theme)
+            shutil.copytree(source_theme, dest_theme)
+            _LOGGER.info(f"✅ Homio theme copied to {dest_theme}")
+            _LOGGER.info("Theme will be available after restart. Select 'Homio' from your profile.")
+        else:
+            _LOGGER.warning(f"Source theme not found: {source_theme}")
+
+    except Exception as e:
+        _LOGGER.error(f"Failed to copy Homio theme: {e}")
 
 
 async def _register_static_resources(hass: HomeAssistant) -> None:
